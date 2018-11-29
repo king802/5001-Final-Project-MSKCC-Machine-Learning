@@ -19,7 +19,7 @@ trainingText = trainingText.split('||')
 trainingText = [x.strip() for x in trainingText]
 
 # limit to the first 200 entries
-trainingData = trainingText[:-10]
+trainingData = trainingText
 
 """
 create 2d array of sample, features
@@ -60,7 +60,7 @@ for line in targetText:
     splitLine = line.strip().split(',')
     targets.append(splitLine[3])
 
-sampleTargets = targets[:-10]
+sampleTargets = targets
 
 """
 train classifier on sample,features v. targets
@@ -74,11 +74,34 @@ classifier = MultinomialNB().fit(trainingXCorrected,sampleTargets)
 test the classifier's ability to...classify
 """
 
-testData = trainingText[-10:]
-testX = countVectorizer.transform(testData)
-testXCorrected = tfidfTransformer.transform(testX)
+# open test data
+with open('test_text.txt', 'r') as f:
+    testData = f.read()
 
+# vectorize text data
+testData = testData.split("||")
+testData = [x.strip() for x in testData]
+testData = testData[1:] # get rid of header line
+
+testXCounts = countVectorizer.transform(testData)
+testXCorrected = tfidfTransformer.transform(testXCounts)
+
+# open test target data
+with open('training_variants.txt','r') as f:
+    testTargets = f.readlines()
+
+testTargets = [line.strip().split(',')[3] for line in testTargets]
+
+# predicted test values
 predicted = classifier.predict(testXCorrected)
 
-print(predicted)
-print(targets[-10:])
+# grade performance
+score = 0
+
+for i in range(len(predicted)):
+    if predicted[i] == testTargets[i]:
+        score += 1
+
+# report results
+print("score is %d of %d for %f correct" % (score,len(predicted),float(score) / float(len(predicted))))
+print("random would have achieved %d of %d correct" % (len(predicted) * (float(1) / float(9)), len(predicted)))
