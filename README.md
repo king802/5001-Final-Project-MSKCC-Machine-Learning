@@ -1,4 +1,5 @@
-# 5001-Final-Project-MSKCC-Machine-Learning
+# 5100 Final Project: Personalized Medicine: Redefining Cancer Treatment 
+## By Maxwell King and Seth Pate
 
 Submission for the Final Project of NEU CCIS 5001: Foundations of Artifical Intelligence.
 
